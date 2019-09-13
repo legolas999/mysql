@@ -1,0 +1,9 @@
+DROP EVENT IF EXISTS purge_salary_audit;
+DELIMITER $$
+CREATE EVENT IF NOT EXISTS purge_salary_audit ON SCHEDULE
+  EVERY 1 DAY
+  STARTS CURRENT_DATE
+  DO BEGIN
+      DELETE FROM salary_audit WHERE date_modified < DATE_ADD(CURDATE(),INTERVAL -30 day);
+  END $$
+DELIMITER ;

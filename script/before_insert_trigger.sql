@@ -1,0 +1,19 @@
+DROP TRIGGER IF EXISTS salary_round;
+DELIMITER $$
+CREATE TRIGGER salary_round BEFORE INSERT ON salaries
+FOR EACH ROW
+BEGIN
+    SET NEW.salary=ROUND(NEW.salary);
+END
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER salary_audit
+BEFORE INSERT ON salaries
+FOR EACH ROW PRECEDES salary_round
+BEGIN
+    INSERT INTO salary_audit VALUES(NEW.emp_no,USER(),CURDATE());
+END
+$$
+DELIMITER ;
